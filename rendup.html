@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReNDUP — Resource Nexus Challenges for Urban-industrial Decarbonisation Pathways</title>
+
+<!--
+============================================================================
+  HOW TO EDIT THIS PAGE — QUICK GUIDE
+============================================================================
+  This file is plain HTML + CSS + a small bit of JavaScript. You don't need
+  any special software — just open it in a text editor (Notepad, VS Code,
+  TextEdit, etc.), make your changes, save, and refresh the browser.
+
+  Below is a map of where to find each editable piece. Every editable spot
+  in the code also has an inline comment like this one marking it, so you
+  can just search (Ctrl+F / Cmd+F) for these labels directly in the file:
+
+  [EDIT: TITLE]           -> The big page title text
+  [EDIT: LOGOS]           -> The three partner organization logos
+  [EDIT: DESCRIPTION]     -> The paragraph describing the project
+  [EDIT: RESEARCH LINKS]  -> Links under "Research Publications"
+  [EDIT: MEDIA LINKS]     -> Links under "Publications in the Media" (sorted
+                             latest to earliest — add new items in date order)
+  [EDIT: OTHER LINKS]     -> Links under "Other Resources"
+  [EDIT: CTA]             -> The "Would you like to discuss more?" button + email
+  [EDIT: FOOTER]          -> The funding acknowledgment line at the bottom
+
+  TO ADD A NEW LINK under any resource category, copy an existing line
+  that looks like this:
+      <li><a href="PUT_URL_HERE">Put the link title here</a></li>
+  and paste a new one right above or below it, then change the URL and text.
+
+  TO SWAP A LOGO, replace the image file in the /assets folder with your
+  own file (keep the same filename, or update the "src" path to match your
+  new filename).
+============================================================================
+-->
+
+<style>
+  :root {
+    --primary-blue: #003C71;
+    --accent-gold: #E8A33D;
+    --text-dark: #333333;
+    --text-mid: #666666;
+    --bg-light: #F5F5F5;
+    --border-light: #E0E0E0;
+    --white: #FFFFFF;
+    --hero-navy: #041C32;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    color: var(--text-dark);
+    background: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .hero {
+    position: relative;
+    background: var(--hero-navy);
+    overflow: hidden;
+    padding: 56px 0 48px 0;
+    border-bottom: 4px solid var(--accent-gold);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  #particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  h1.page-title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.3px;
+    margin-bottom: 40px;
+    max-width: 820px;
+  }
+
+  h1.page-title .highlight {
+    color: var(--accent-gold);
+    font-weight: 800;
+    border-bottom: 2px solid var(--accent-gold);
+    padding-bottom: 1px;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: nowrap;
+  }
+
+  .logo-row img {
+    height: 34px;
+    width: auto;
+    object-fit: contain;
+    opacity: 0.95;
+    background: #ffffff;
+    padding: 4px 8px;
+    border-radius: 3px;
+  }
+
+  section.description {
+    padding: 56px 0;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent-gold);
+    margin-bottom: 12px;
+  }
+
+  section.description p {
+    color: var(--text-mid);
+    font-size: 1.05rem;
+    max-width: 780px;
+  }
+
+  /* Resources section is now full-bleed (outside the main .container),
+     so its grey background spans the whole viewport width instead of
+     appearing as a narrow floating box. */
+  section.resources {
+    width: 100%;
+    padding: 56px 0;
+    background: var(--bg-light);
+    border-top: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  section.resources h2 {
+    color: var(--primary-blue);
+    font-size: 1.6rem;
+    margin-bottom: 32px;
+  }
+
+  .resource-group {
+    margin-bottom: 32px;
+  }
+
+  .resource-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .resource-group h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    border-left: 3px solid var(--accent-gold);
+    padding-left: 12px;
+  }
+
+  .resource-group ul {
+    list-style: none;
+    padding-left: 15px;
+  }
+
+  .resource-group li {
+    margin-bottom: 6px;
+  }
+
+  .resource-group a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-bottom: 1px solid transparent;
+  }
+
+  .resource-group a:hover {
+    border-bottom: 1px solid var(--primary-blue);
+  }
+
+  .coming-soon {
+    font-size: 0.95rem;
+    color: var(--text-mid);
+    font-style: italic;
+    padding-left: 15px;
+  }
+
+  .media-item {
+    margin-bottom: 16px;
+  }
+
+  .media-item a {
+    font-weight: 600;
+  }
+
+  .media-date {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  section.discuss {
+    padding: 48px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  section.discuss p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    max-width: 480px;
+  }
+
+  .action-btn {
+    display: inline-block;
+    background: var(--primary-blue);
+    color: var(--white);
+    padding: 14px 28px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .action-btn:hover {
+    background: #002B52;
+  }
+
+  .contact-link {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    text-align: right;
+  }
+
+  .contact-link a {
+    color: var(--primary-blue);
+    text-decoration: none;
+  }
+
+  footer {
+    padding: 28px 0 48px 0;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  footer .icon {
+    color: var(--accent-gold);
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 600px) {
+    h1.page-title { font-size: 1.5rem; }
+    section.discuss { flex-direction: column; align-items: flex-start; }
+    .contact-link { text-align: left; }
+    .logo-row { gap: 18px; flex-wrap: wrap; }
+    .logo-row img { height: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <canvas id="particle-canvas"></canvas>
+
+  <div class="container">
+    <!-- [EDIT: TITLE] -->
+    <h1 class="page-title">
+      Resource Nexus Challenges for Urban-industrial Decarbonisation Pathways:
+      Analytical Perspectives and Future Place-based Strategies
+      (<span class="highlight">ReNDUP</span>)
+    </h1>
+
+    <!-- [EDIT: LOGOS] -->
+    <div class="logo-row">
+      <img src="assets/logo-unu.png" alt="UNU Resource Nexus logo">
+      <img src="assets/logo-ioer.png" alt="Leibniz Institute of Ecological Urban and Regional Development logo">
+      <img src="assets/logo-tud.webp" alt="TU Dresden logo">
+    </div>
+  </div>
+</div>
+
+<!-- [EDIT: DESCRIPTION] -->
+<div class="container">
+  <section class="description">
+    <div class="section-label">About the project</div>
+    <p>
+      Urban manufacturing industries, such as the textile sector are crucial to economic growth in numerous developing economies, while also contributing to pollution and environmental degradation of these economies.
+      This industry requires high amounts of water, energy and raw materials as an input and the output is waste streams such as wastewater and greenhouse gases (GHGs). 
+      The global textile market size is projected to reach US$3,767.92bn by 2033, implying a strong background for job prospectives and improved livelihoods of people coupled with industrial growth. 
+      However, this growth comes with a cost. The environmental risks associated with this growth need a holistic approach to mitigate and adapt to the realities of planetary boundaries
+      The ReNDUP project investigates and calls for an integrated approach to decarbonization strategy development following the Resource Nexus perspective.
+    </p>
+  </section>
+</div>
+
+<!-- Resources section is full-bleed (outside .container) so its grey
+     background spans edge-to-edge instead of floating in a narrow box.
+     An inner .container centers and constrains the actual content. -->
+<section class="resources">
+  <div class="container">
+    <h2>Resources</h2>
+
+    <!-- [EDIT: RESEARCH LINKS] -->
+    <div class="resource-group">
+      <h3>Research Publications</h3>
+      <ul>
+        <li><a href="chrome-extension://kdpelmjpfafjppnhbloffcjpeomlnpah/https://dlgs-dresden.de/fileadmin/user_upload/files/DLGS_SummerSchool2025_Book-of-Abstracts_250912.pdf">DLGS Summer School 2025 — Book of Abstracts</a></li>
+      </ul>
+      <p class="coming-soon">More publications coming soon — please check back for updates.</p>
+    </div>
+
+    <!-- [EDIT: MEDIA LINKS] — sorted LATEST to EARLIEST by confirmed
+         publish date. To add a new one, copy a full <li>...</li> block
+         and place it in the correct chronological position. -->
+    <div class="resource-group">
+      <h3>Publications in the Media</h3>
+      <ul>
+        <li class="media-item">
+          <a href="https://www.nutshelltoday.com/article/dhaka-wetlands-canals-governance">Dhaka's wetlands, canals, governance</a>
+          <span class="media-date">Published: August 17, 2026</span>
+        </li>
+        <li class="media-item">
+          <a href="https://www.thedailystar.net/opinion/views/news/how-energy-insecurity-and-climate-vulnerability-converge-bangladesh-4090331">How energy insecurity and climate vulnerability converge in Bangladesh</a>
+          <span class="media-date">Published: January 26, 2026</span>
+        </li>
+        <li class="media-item">
+          <a href="https://www.thedailystar.net/opinion/views/news/world-environment-day-story-memory-and-nature-3911286">World Environment Day: A story of memory and nature</a>
+          <span class="media-date">Published: June 5, 2025</span>
+        </li>
+        <li class="media-item">
+          <a href="https://www.thedailystar.net/opinion/views/news/the-earth-bank-and-its-defaulters-3877056">The Earth as a bank and its 'defaulters'</a>
+          <span class="media-date">Published: April 22, 2025</span>
+        </li>
+        <li class="media-item">
+          <a href="https://www.thedailystar.net/opinion/views/news/do-i-really-need-new-piece-clothing-3860236">Do I really need that new piece of clothing?</a>
+          <span class="media-date">Published: March 30, 2025</span>
+        </li>
+        <li class="media-item">
+          <a href="https://www.thedailystar.net/opinion/views/news/women-stem-can-revolutionise-the-industry-3820906">Women in STEM can revolutionise the industry</a>
+          <span class="media-date">Published: February 11, 2025</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- [EDIT: OTHER LINKS] -->
+    <div class="resource-group">
+      <h3>Other Resources</h3>
+      <ul>
+        <li class="media-item">
+          <a href="https://tu-dresden.de/tu-dresden/exzellenz/news/johanna-haupt-gewinnt-den-science-slam-der-langen-nacht-der-wissenschaften?set_language=en">Science Slam der Langen Nacht der Wissenschaften</a>
+          <span class="media-date">June 2026</span>
+        </li>
+        <li class="media-item">
+          <a href="https://unu.edu/resource-nexus/article/science-slam-linking-science-society">Science Slam: Linking Science to Society</a>
+          <span class="media-date">November 2025</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <!-- [EDIT: CTA] -->
+  <section class="discuss">
+    <p>Would you like to discuss more about sustainability transitions?</p>
+    <div>
+      <a href="https://www.linkedin.com/in/alavy-kifait-r-51763229/" class="action-btn">Get in Touch</a>
+      <span class="contact-link">areza@unu.edu</span>
+    </div>
+  </section>
+
+  <!-- [EDIT: FOOTER] -->
+  <footer>
+    <p><span class="icon">&#9733;</span> This doctoral research is a part of Resource Nexus for Sustainability Transformations (NEXtra)
+project funded by the DAAD (EPOS programme).</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  const hero = canvas.parentElement;
+
+  let width, height;
+  let particles = [];
+  let mouse = { x: null, y: null, radius: 120 };
+
+  const PARTICLE_COUNT_DIVISOR = 9000;
+  const LINE_DISTANCE = 110;
+  const MOUSE_LINE_DISTANCE = 150;
+  const PARTICLE_SPEED = 0.3;
+
+  function resizeCanvas() {
+    width = canvas.width = hero.offsetWidth;
+    height = canvas.height = hero.offsetHeight;
+  }
+
+  function createParticles() {
+    const count = Math.floor((width * height) / PARTICLE_COUNT_DIVISOR);
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * PARTICLE_SPEED,
+        vy: (Math.random() - 0.5) * PARTICLE_SPEED,
+        radius: 1.6
+      });
+    }
+  }
+
+  function updateParticles() {
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < 0 || p.x > width) p.vx *= -1;
+      if (p.y < 0 || p.y > height) p.vy *= -1;
+
+      if (mouse.x !== null) {
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < mouse.radius && dist > 0) {
+          const force = (mouse.radius - dist) / mouse.radius;
+          const pushStrength = 0.6;
+          p.x += (dx / dist) * force * pushStrength;
+          p.y += (dy / dist) * force * pushStrength;
+        }
+      }
+    }
+  }
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, width, height);
+
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const a = particles[i];
+        const b = particles[j];
+        const dx = a.x - b.x;
+        const dy = a.y - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < LINE_DISTANCE) {
+          ctx.strokeStyle = `rgba(232, 163, 61, ${1 - dist / LINE_DISTANCE * 0.85})`;
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    if (mouse.x !== null) {
+      for (const p of particles) {
+        const dx = p.x - mouse.x;
+        const dy = p.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < MOUSE_LINE_DISTANCE) {
+          ctx.strokeStyle = `rgba(255, 255, 255, ${1 - dist / MOUSE_LINE_DISTANCE})`;
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+    for (const p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function animate() {
+    updateParticles();
+    drawParticles();
+    requestAnimationFrame(animate);
+  }
+
+  hero.addEventListener('mousemove', function (e) {
+    const rect = hero.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+
+  hero.addEventListener('mouseleave', function () {
+    mouse.x = null;
+    mouse.y = null;
+  });
+
+  window.addEventListener('resize', function () {
+    resizeCanvas();
+    createParticles();
+  });
+
+  resizeCanvas();
+  createParticles();
+  animate();
+})();
+</script>
+
+</body>
+</html>
